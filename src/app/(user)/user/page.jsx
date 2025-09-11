@@ -1,5 +1,7 @@
 "use client";
 import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import ProfilePic from "../../../assets/images/profile.jpg";
 import EditPen from "../../../assets/icons/EditPen";
@@ -13,6 +15,7 @@ import { toast } from "sonner";
 const Page = () => {
   const { data, isPending, refetch } = useGetUserProfile();
   const fileInputRef = useRef(null);
+  const router = useRouter();
   const { mutate: updateProfilePicture, isPending: isUploading } =
     useUpdateUserProfilePicture(() => {
       refetch(); // Refetch profile after successful upload
@@ -30,13 +33,24 @@ const Page = () => {
     updateProfilePicture(file);
   };
 
+  // Removed handleChangePassword, using Link instead
+
   return (
     <>
       {(isPending || isUploading) && <LoadingBackdrop />}
       <div className="py-4 md:py-9 px-4 md:px-6 lg:px-[4.167vw]">
-        <h2 className="mb-4 font-bold md:text-[24px]/[150%] text-[20px]/[150%]">
-          Willkommen zurück, {data?.user?.firstName} {data?.user?.lastName}
-        </h2>
+        {/* Header with Change Password Link */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-bold md:text-[24px]/[150%] text-[20px]/[150%]">
+            Willkommen zurück, {data?.user?.firstName} {data?.user?.lastName}
+          </h2>
+          <Link
+            href="/user/changePassword"
+            className="bg-black text-white px-4 py-2 font-medium text-[14px] hover:bg-gray-800 transition-colors"
+          >
+            Change password
+          </Link>
+        </div>
 
         <div className="flex flex-col md:flex-row gap-6">
           {/* left */}
